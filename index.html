@@ -5,12 +5,59 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Poster Generator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Preload Effra Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="https://ai-poster-api-staging.hi-lab.ai/assets/fonts/Effra_Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
     />
+    <link
+      rel="preload"
+      href="https://ai-poster-api-staging.hi-lab.ai/assets/fonts/Effra_Bold.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="https://ai-poster-api-staging.hi-lab.ai/assets/fonts/Effra_Thin.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+
+    <!-- Define Effra Font Faces -->
+    <style>
+      @font-face {
+        font-family: "Effra";
+        src: url("https://ai-poster-api-staging.hi-lab.ai/assets/fonts/Effra_Regular.ttf")
+          format("truetype");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Effra";
+        src: url("https://ai-poster-api-staging.hi-lab.ai/assets/fonts/Effra_Bold.ttf")
+          format("truetype");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Effra";
+        src: url("https://ai-poster-api-staging.hi-lab.ai/assets/fonts/Effra_Thin.ttf")
+          format("truetype");
+        font-weight: 100;
+        font-style: normal;
+        font-display: swap;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

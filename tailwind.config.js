@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
+        sans: ["Effra", "system-ui", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
