@@ -7,7 +7,7 @@ import {
   ChevronRight,
   Edit2,
 } from "lucide-react";
-import { Logo } from "@/components/ui/Logo";
+import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
