@@ -33,12 +33,10 @@ export function PosterCard({
 }: PosterCardProps) {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
-  const [favorite, setFavorite] = useState(isFavorite);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setFavorite(!favorite);
     onToggleFavorite?.(id);
   };
 
@@ -116,7 +114,7 @@ export function PosterCard({
               >
                 <Star
                   className={`w-4 h-4 ${
-                    favorite ? "fill-yellow-400 text-yellow-400" : ""
+                    isFavorite ? "fill-yellow-400 text-yellow-400" : ""
                   }`}
                 />
               </Button>

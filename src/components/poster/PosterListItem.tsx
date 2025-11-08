@@ -31,12 +31,10 @@ export function PosterListItem({
   onDownload,
 }: PosterListItemProps) {
   const navigate = useNavigate();
-  const [favorite, setFavorite] = useState(isFavorite);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setFavorite(!favorite);
     onToggleFavorite?.(id);
   };
 
@@ -90,7 +88,7 @@ export function PosterListItem({
         >
           <Star
             className={`w-4 h-4 ${
-              favorite ? "fill-yellow-400 text-yellow-400" : "text-gray-400"
+              isFavorite ? "fill-yellow-400 text-yellow-400" : "text-gray-400"
             }`}
           />
         </Button>

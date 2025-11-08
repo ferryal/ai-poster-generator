@@ -29,9 +29,7 @@ export function VariantCodeBlock({
         variant="ghost"
         className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-none h-auto"
       >
-        <h2 className="text-lg font-semibold text-gray-900">
-          Variant {variantNumber} - HTML Code
-        </h2>
+        <h2 className="text-lg font-semibold text-gray-900">HTML Code</h2>
         {isExpanded ? (
           <ChevronUp className="w-5 h-5 text-gray-400" />
         ) : (
@@ -74,4 +72,3 @@ export function VariantCodeBlock({
     </Card>
   );
 }
-
