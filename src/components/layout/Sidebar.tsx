@@ -11,7 +11,11 @@ import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { usePosterStore } from "@/stores";
+import { useJobsInfinite } from "@/queries/use-jobs-infinite";
+import type { Job } from "@/types";
+import { useEffect, useRef, useCallback } from "react";
 
 interface SidebarProps {
   className?: string;
@@ -22,20 +26,74 @@ interface SidebarProps {
 export function Sidebar({ className, isCollapsed, onToggle }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { posters, activePoster, addPoster, setActivePoster } =
-    usePosterStore();
+  const { addPoster } = usePosterStore();
+  const observerTarget = useRef<HTMLDivElement>(null);
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useJobsInfinite();
 
   const isActive = (path: string) => location.pathname === path;
 
+  // infinite scroll observer
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [target] = entries;
+      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+
+  useEffect(() => {
+    const element = observerTarget.current;
+    if (!element || !hasNextPage) {
+      return;
+    }
+
+    const scrollContainer = element.parentElement;
+    const observer = new IntersectionObserver(handleObserver, {
+      root: scrollContainer ?? null,
+      threshold: 0.1,
+      rootMargin: "0px 0px 160px 0px",
+    });
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [handleObserver, hasNextPage]);
+
+  // Flatten all pages into a single array of jobs
+  const allJobs = data?.pages.flatMap((page) => page.data) ?? [];
+  const filteredJobs = allJobs.filter(
+    (job) => job.status === "completed" && job.transcription?.trim()
+  );
+
   const handleCreateNewPoster = () => {
     // Create a new poster with "Untitled" title
-    const newPosterId = addPoster({
+    addPoster({
       title: "Untitled",
       status: "draft",
     });
 
     // Navigate to create poster page
     navigate("/create-poster");
+  };
+
+  // Get poster title from CTA (prefer en, fallback to ar)
+  const getPosterTitle = (job: Job) => {
+    const transcription = job.transcription?.trim() ?? "";
+    return transcription.length > 80
+      ? `${transcription.slice(0, 80)}…`
+      : transcription;
+  };
+
+  const getNavigationPath = (job: Job) => {
+    return job.status === "completed" ? `/gallery/${job.id}` : "/create-poster";
   };
 
   return (
@@ -47,7 +105,6 @@ export function Sidebar({ className, isCollapsed, onToggle }: SidebarProps) {
       )}
       style={{ backgroundColor: "var(--background-secondary, #F9F9F9)" }}
     >
-      {/* Header */}
       <div className="p-6 flex items-center justify-between">
         <div
           className={cn(
@@ -71,7 +128,7 @@ export function Sidebar({ className, isCollapsed, onToggle }: SidebarProps) {
         )}
       </div>
 
-      {/* Expand Button when Collapsed */}
+      {/* expand button when collapsed */}
       {isCollapsed && (
         <Button
           onClick={onToggle}
@@ -83,7 +140,7 @@ export function Sidebar({ className, isCollapsed, onToggle }: SidebarProps) {
         </Button>
       )}
 
-      {/* Navigation */}
+      {/* navigation */}
       <nav className={cn("px-4 space-y-1", isCollapsed && "px-2")}>
         <Link
           to="/"
@@ -143,9 +200,9 @@ export function Sidebar({ className, isCollapsed, onToggle }: SidebarProps) {
         </Link>
       </nav>
 
-      {/* Generated Poster Section */}
+      {/* generated poster section */}
       {!isCollapsed && (
-        <div className="mt-8 px-4 flex-1">
+        <div className="mt-2 px-4 flex-1">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider">
               Generated Poster
@@ -160,28 +217,59 @@ export function Sidebar({ className, isCollapsed, onToggle }: SidebarProps) {
             Create new poster
           </button>
 
-          <div className="space-y-1">
-            {posters.map((poster) => (
-              <Link
-                key={poster.id}
-                to={
-                  poster.status === "draft"
-                    ? "/create-poster"
-                    : `/gallery/${poster.id}`
-                }
-                onClick={() => setActivePoster(poster.id)}
-                className={cn(
-                  "w-full text-left px-3 py-2.5 text-sm rounded-xl truncate block transition-colors",
-                  activePoster === poster.id ||
-                    (location.pathname === "/create-poster" &&
-                      poster.status === "draft")
-                    ? "text-gray-900 bg-white"
-                    : "text-gray-600 hover:bg-white"
-                )}
-              >
-                {poster.title}
-              </Link>
-            ))}
+          <div className="space-y-1 overflow-y-auto max-h-[calc(100vh-300px)]">
+            {isLoading && (
+              <>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <div key={index} className="px-3 py-2.5">
+                    <Skeleton className="h-5 w-full rounded bg-gray-200" />
+                  </div>
+                ))}
+              </>
+            )}
+            {isError && (
+              <p className="text-xs text-red-400 px-3 py-2">
+                Error loading posters
+              </p>
+            )}
+            {filteredJobs.map((job) => {
+              const title = getPosterTitle(job);
+              const path = getNavigationPath(job);
+              const isActiveJob =
+                location.pathname === `/gallery/${job.id}` ||
+                (location.pathname === "/create-poster" &&
+                  job.status !== "completed");
+
+              return (
+                <Link
+                  key={job.id}
+                  to={path}
+                  className={cn(
+                    "w-full text-left px-3 py-2.5 text-sm rounded-xl truncate block transition-colors",
+                    isActiveJob
+                      ? "text-gray-900 bg-white"
+                      : "text-gray-600 hover:bg-white"
+                  )}
+                  title={title}
+                >
+                  {title}
+                </Link>
+              );
+            })}
+
+            {/* intersection observer target for infinite scroll */}
+            {hasNextPage && <div ref={observerTarget} className="h-4" />}
+
+            {/* loading more indicator */}
+            {hasNextPage && isFetchingNextPage && (
+              <>
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <div key={`loading-${index}`} className="px-3 py-2.5">
+                    <Skeleton className="h-5 w-full rounded bg-gray-200" />
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </div>
       )}
