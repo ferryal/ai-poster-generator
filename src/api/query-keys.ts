@@ -10,6 +10,10 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.prompts.details(), id] as const,
     stats: () => [...queryKeys.prompts.all, "stats"] as const,
   },
+  settings: {
+    all: ["settings"] as const,
+    posterPresets: () => [...queryKeys.settings.all, "poster-presets"] as const,
+  },
   jobs: {
     all: ["jobs"] as const,
     lists: () => [...queryKeys.jobs.all, "list"] as const,

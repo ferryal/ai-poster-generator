@@ -18,6 +18,9 @@ export const API_ENDPOINTS = {
     UPDATE: (id: string) => `/prompts/${id}`,
     DELETE: (id: string) => `/prompts/${id}`,
   },
+  SETTINGS: {
+    POSTER_PRESETS: "/poster-presets",
+  },
   JOBS: {
     CREATE: "/jobs/create",
     LIST: "/jobs",

@@ -1,24 +1,25 @@
 import { apiClient } from "./client";
 import { API_ENDPOINTS } from "./config";
 import type {
-  GetPromptsResponse,
-  GetPromptResponse,
-  GetPromptStatsResponse,
-  CreatePromptResponse,
-  UpdatePromptResponse,
-  DeletePromptResponse,
-  GetPromptsParams,
-  CreatePromptRequest,
-  UpdatePromptRequest,
   CreateJobResponse,
-  UploadJobFilesRequest,
-  UploadJobResponse,
-  GetJobStatusResponse,
-  GetJobResultsResponse,
-  GetProcessingStatusResponse,
+  CreatePromptRequest,
+  CreatePromptResponse,
+  DeletePromptResponse,
   DownloadPosterResponse,
   GetAllJobsParams,
   GetAllJobsResponse,
+  GetJobResultsResponse,
+  GetJobStatusResponse,
+  GetProcessingStatusResponse,
+  GetPromptResponse,
+  GetPromptsParams,
+  GetPromptsResponse,
+  GetPromptStatsResponse,
+  PosterPresetsResponse,
+  UpdatePromptRequest,
+  UpdatePromptResponse,
+  UploadJobFilesRequest,
+  UploadJobResponse,
 } from "@/types";
 
 // prompts API endpoints
@@ -74,6 +75,16 @@ export const promptsApi = {
   deletePrompt: async (id: string): Promise<DeletePromptResponse> => {
     const response = await apiClient.delete<DeletePromptResponse>(
       `/prompts/${id}`
+    );
+    return response.data;
+  },
+};
+
+// settings API endpoints
+export const settingsApi = {
+  getPosterPresets: async (): Promise<PosterPresetsResponse> => {
+    const response = await apiClient.get<PosterPresetsResponse>(
+      API_ENDPOINTS.SETTINGS.POSTER_PRESETS
     );
     return response.data;
   },

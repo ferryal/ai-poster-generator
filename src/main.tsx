@@ -9,6 +9,8 @@ import { HomePage } from "./pages/HomePage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { GalleryDetailPage } from "./pages/GalleryDetailPage";
 import { PromptsPage } from "./pages/PromptsPage";
+import { SettingsPage } from "./pages/SettingsPage";
+import { CreatePosterPage } from "./pages/CreatePosterPage";
 import { NotFound } from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -30,6 +32,8 @@ function App() {
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/gallery/:id" element={<GalleryDetailPage />} />
           <Route path="/prompts" element={<PromptsPage />} />
+          <Route path="/create-poster" element={<CreatePosterPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

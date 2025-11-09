@@ -325,6 +325,33 @@ export interface GetAllJobsResponse {
   };
 }
 
+// poster preset types
+export type PosterOrientation = "horizontal" | "vertical" | "square";
+
+export interface PosterPresetDimensions {
+  width: number;
+  height: number;
+}
+
+export interface PosterSizePreset {
+  key: string;
+  orientation: PosterOrientation;
+  type: string;
+  dimensions: PosterPresetDimensions;
+}
+
+export interface PosterPresets {
+  sizes: PosterSizePreset[];
+  backgroundColors: string[];
+  useCases: Record<string, string>;
+  positions: string[];
+}
+
+export interface PosterPresetsResponse {
+  success: boolean;
+  presets: PosterPresets;
+}
+
 // SSE event types
 export type SSEEventType =
   | "connected"
