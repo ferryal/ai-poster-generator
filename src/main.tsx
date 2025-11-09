@@ -8,6 +8,7 @@ import { AppLayout } from "./components/layout/AppLayout";
 import { HomePage } from "./pages/HomePage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { GalleryDetailPage } from "./pages/GalleryDetailPage";
+import { PromptsPage } from "./pages/PromptsPage";
 import { NotFound } from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -28,6 +29,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/gallery/:id" element={<GalleryDetailPage />} />
+          <Route path="/prompts" element={<PromptsPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
