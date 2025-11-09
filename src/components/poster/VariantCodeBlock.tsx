@@ -13,9 +13,9 @@ interface VariantCodeBlockProps {
 }
 
 export function VariantCodeBlock({
-  variantNumber,
+  // variantNumber,
   htmlCode,
-  title,
+  // title,
   onCopyCode,
   onDownloadCode,
   defaultExpanded = true,
