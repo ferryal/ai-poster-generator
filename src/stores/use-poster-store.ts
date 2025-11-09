@@ -12,7 +12,7 @@ export interface Poster {
 interface PosterState {
   posters: Poster[];
   activePoster: string | null;
-  
+
   addPoster: (poster: Omit<Poster, "id" | "createdAt">) => string;
   updatePoster: (id: string, updates: Partial<Poster>) => void;
   deletePoster: (id: string) => void;
@@ -21,7 +21,7 @@ interface PosterState {
 
 export const usePosterStore = create<PosterState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       posters: [
         {
           id: "1",
@@ -63,12 +63,12 @@ export const usePosterStore = create<PosterState>()(
           id,
           createdAt: new Date(),
         };
-        
+
         set((state) => ({
           posters: [newPoster, ...state.posters],
           activePoster: id,
         }));
-        
+
         return id;
       },
 
@@ -96,4 +96,3 @@ export const usePosterStore = create<PosterState>()(
     }
   )
 );
-
